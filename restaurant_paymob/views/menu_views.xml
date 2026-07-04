@@ -3,7 +3,8 @@
     <!-- Main Menu -->
     <menuitem id="restaurant_menu_root"
               name="Restaurant 🍽️"
-              sequence="50"/>
+              sequence="50"
+            web_icon="restaurant_paymob,static/description/restaurant-19.png"/>
 
     <!-- Dashboard -->
     <menuitem id="restaurant_menu_dashboard"
