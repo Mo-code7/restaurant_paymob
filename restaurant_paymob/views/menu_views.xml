@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="restaurant_menu_root"
+              name="Restaurant 🍽️"
+              sequence="50"/>
+
+    <!-- Dashboard -->
+    <menuitem id="restaurant_menu_dashboard"
+              name="Dashboard 📊"
+              parent="restaurant_menu_root"
+              action="restaurant_dashboard_action"
+              sequence="5"/>
+
+    <!-- Orders -->
+    <menuitem id="restaurant_menu_orders"
+              name="Orders 📋"
+              parent="restaurant_menu_root"
+              action="restaurant_order_action"
+              sequence="10"/>
+
+    <!-- Reports -->
+    <menuitem id="restaurant_menu_reports"
+              name="Reports 📈"
+              parent="restaurant_menu_root"
+              sequence="20"/>
+
+    <menuitem id="restaurant_menu_sale_report"
+              name="Sales Report"
+              parent="restaurant_menu_reports"
+              action="restaurant_sale_report_action"
+              sequence="10"/>
+</odoo>
