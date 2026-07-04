@@ -14,7 +14,7 @@
         - Print a PDF invoice in Arabic
     """,
     'author': 'Moaz Omar',
-    'website': 'https://eg.dashboard.paymob.com'
+    'website': 'https://eg.dashboard.paymob.com',
     'depends': ['base', 'mail', 'product', 'account'],
     'data': [
         'security/ir.model.access.csv',
