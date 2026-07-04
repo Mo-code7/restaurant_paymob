@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="restaurant_dashboard_view_form" model="ir.ui.view">
+        <field name="name">restaurant.dashboard.form</field>
+        <field name="model">restaurant.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Restaurant Dashboard" create="false" edit="false">
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+
+                    <!-- Title -->
+                    <div style="text-align:center; padding: 16px 0 24px 0;">
+                        <span style="font-size:28px; font-weight:600;">Restaurant Dashboard 🍽️</span>
+                    </div>
+
+                    <!-- ─── Today's statistics ─── -->
+                    <div style="margin-bottom: 8px; font-weight:600; font-size:14px; color:#6c757d; padding: 0 4px;">
+                        Today's statistics 📅
+                    </div>
+                    <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+
+                        <!-- Today's Orders -->
+                        <div style="flex:1; min-width:140px; background:#714B67; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:32px; font-weight:700; color:#fff; line-height:1;">
+                                <field name="today_orders" readonly="1"/>
+                            </div>
+                            <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-top:6px;">Today's Orders</div>
+                        </div>
+
+                        <!-- Today's revenue -->
+                        <div style="flex:1; min-width:140px; background:#28A745; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:24px; font-weight:700; color:#fff; line-height:1;">
+                                <field name="today_revenue" readonly="1" widget="monetary"/>
+                            </div>
+                            <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-top:6px;">Today's revenue</div>
+                        </div>
+
+                        <!-- Paid -->
+                        <div style="flex:1; min-width:140px; background:#17A2B8; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:32px; font-weight:700; color:#fff; line-height:1;">
+                                <field name="today_paid" readonly="1"/>
+                            </div>
+                            <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-top:6px;">Paid ✅</div>
+                        </div>
+
+                        <!-- Pending -->
+                        <div style="flex:1; min-width:140px; background:#FFC107; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:32px; font-weight:700; color:#fff; line-height:1;">
+                                <field name="today_pending" readonly="1"/>
+                            </div>
+                            <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-top:6px;">Pending ⏳</div>
+                        </div>
+
+                    </div>
+
+                    <!-- ─── Weekly statistics ─── -->
+                    <div style="margin-bottom: 8px; font-weight:600; font-size:14px; color:#6c757d; padding: 0 4px;">
+                        Weekly statistics📊
+                    </div>
+                    <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+
+                        <!-- Weekly Orders -->
+                        <div style="flex:1; min-width:160px; border:1px solid #dee2e6; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:32px; font-weight:700; line-height:1;">
+                                <field name="week_orders" readonly="1"/>
+                            </div>
+                            <div style="font-size:13px; color:#6c757d; margin-top:6px;">Weekly Orders</div>
+                        </div>
+
+                        <!-- Weekly revenue -->
+                        <div style="flex:1; min-width:160px; border:1px solid #dee2e6; border-radius:12px; padding:20px 16px; text-align:center;">
+                            <div style="font-size:24px; font-weight:700; line-height:1;">
+                                <field name="week_revenue" readonly="1" widget="monetary"/>
+                            </div>
+                            <div style="font-size:13px; color:#6c757d; margin-top:6px;">Weekly revenue</div>
+                        </div>
+
+                        <!-- Most requested item -->
+                        <div style="flex:1; min-width:160px; border:1px solid #dee2e6; border-radius:12px; padding:20px 16px; text-align:center; background:#f8f9fa;">
+                            <div style="font-size:16px; font-weight:600; line-height:1.4;">
+                                🏆 <field name="top_product_name" readonly="1"/>
+                            </div>
+                            <div style="font-size:13px; color:#6c757d; margin-top:6px;">
+                                Most requested item
+                                (<field name="top_product_qty" readonly="1"/> Unit)
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ─── Quick links ─── -->
+                    <div style="margin-bottom: 8px; font-weight:600; font-size:14px; color:#6c757d; padding: 0 4px;">
+                        Quick links 🔗
+                    </div>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button name="action_open_orders"
+                                type="object"
+                                string="View all orders 📋"
+                                class="btn btn-primary"
+                                style="flex:1; min-width:160px; padding:14px; font-size:15px; border-radius:10px;"/>
+                        <button name="action_open_report"
+                                type="object"
+                                string="Sales Report 📈"
+                                class="btn btn-success"
+                                style="flex:1; min-width:160px; padding:14px; font-size:15px; border-radius:10px;"/>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="restaurant_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Restaurant Dashboard</field>
+        <field name="res_model">restaurant.dashboard</field>
+        <field name="view_mode">form</field>
+        <!-- <field name="target">inline</field> -->
+        <field name="context">{'default_id': 1}</field>
+    </record>
+
+</odoo>

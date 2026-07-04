@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- QWeb Template for the invoice -->
+    <template id="report_restaurant_invoice_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="doc"/>
+            <div class="page" dir="rtl" style="font-family: Arial, sans-serif;">
+
+                <!-- Invoice header -->
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h2 style="color:#2c3e50;">Restaurant bill 🍽️</h2>
+                        <h3 class="text-muted">
+                            <t t-esc="o.name"/>
+                        </h3>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="badge rounded-pill px-3 py-2 fs-6"
+                             t-attf-style="background-color: #{
+                                 '#27ae60' if o.state == 'paid' else
+                                 '#e67e22' if o.state == 'preparing' else '#3498db'
+                             }; color:white;">
+                            <t t-esc="dict(o.fields_get(['state'])['state']['selection'])[o.state]"/>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- Customer data and order -->
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <strong>Customer:</strong>
+                        <t t-esc="o.partner_id.name"/><br/>
+                        <t t-if="o.partner_id.phone">
+                            <strong>📞</strong> <t t-esc="o.partner_id.phone"/><br/>
+                        </t>
+                        <t t-if="o.partner_id.email">
+                            <strong>✉️</strong> <t t-esc="o.partner_id.email"/>
+                        </t>
+                    </div>
+                    <div class="col-6 text-end">
+                        <strong>Order type:</strong>
+                        <t t-esc="dict(o.fields_get(['order_type'])['order_type']['selection'])[o.order_type]"/>
+                        <br/>
+                        <t t-if="o.table_number">
+                            <strong>Table NO.:</strong> <t t-esc="o.table_number"/><br/>
+                        </t>
+                        <strong>Date:</strong>
+                        <t t-esc="o.create_date" t-options="{'widget': 'datetime', 'format': 'dd/MM/yyyy HH:mm'}"/>
+                    </div>
+                </div>
+
+                <!-- Categories Table -->
+                <table class="table table-bordered table-striped">
+                    <thead style="background-color:#2c3e50; color:white;">
+                        <tr>
+                            <th class="text-center" style="width:5%">#</th>
+                            <th>Category</th>
+                            <th class="text-center" style="width:12%">Quantity</th>
+                            <th class="text-center" style="width:15%">Unit price</th>
+                            <th class="text-center" style="width:15%">Tax</th>
+                            <th class="text-center" style="width:15%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="counter" t-value="0"/>
+                        <t t-foreach="o.order_line_ids" t-as="line">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <tr>
+                                <td class="text-center"><t t-esc="counter"/></td>
+                                <td>
+                                    <t t-esc="line.product_id.name"/>
+                                    <t t-if="line.notes">
+                                        <br/><small class="text-muted">* <t t-esc="line.notes"/></small>
+                                    </t>
+                                </td>
+                                <td class="text-center"><t t-esc="line.product_qty"/></td>
+                                <td class="text-center">
+                                    <t t-esc="line.price_unit"
+                                       t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line.price_tax"
+                                       t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line.price_subtotal + line.price_tax"
+                                       t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <!-- Totals -->
+                <div class="row justify-content-end">
+                    <div class="col-5">
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>total before tax:</strong></td>
+                                <td class="text-end">
+                                    <t t-esc="o.amount_untaxed"
+                                       t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tax:</strong></td>
+                                <td class="text-end">
+                                    <t t-esc="o.amount_tax"
+                                       t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#2c3e50; color:white; font-size:1.2em;">
+                                <td><strong>Total:</strong></td>
+                                <td class="text-end">
+                                    <strong>
+                                        <t t-esc="o.amount_total"
+                                           t-options="{'widget':'monetary','display_currency':o.currency_id}"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payment status -->
+                <div class="mt-3">
+                    <t t-if="o.payment_status == 'success'">
+                        <div class="alert alert-success text-center">
+                            ✅ <strong>Payment made successfully via PayMob</strong>
+                            <t t-if="o.paymob_transaction_id">
+                                — Transaction ID: <t t-esc="o.paymob_transaction_id"/>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-elif="o.payment_status == 'pending'">
+                        <div class="alert alert-warning text-center">
+                            ⏳ <strong>Payment pending</strong>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Notes -->
+                <t t-if="o.notes">
+                    <div class="mt-3">
+                        <strong>Notes:</strong>
+                        <p><t t-esc="o.notes"/></p>
+                    </div>
+                </t>
+
+                <!-- Footer -->
+                <div class="text-center mt-4 text-muted" style="border-top:1px solid #eee; padding-top:16px;">
+                    <p>Thank you for your visit 🙏 — We hope to see you again</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="restaurant_order_report_action" model="ir.actions.report">
+        <field name="name">Order invoice</field>
+        <field name="model">restaurant.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">restaurant_paymob.report_restaurant_invoice_document</field>
+        <field name="report_file">restaurant_paymob.report_restaurant_invoice_document</field>
+        <field name="print_report_name">'invoice - ' + object.name</field>
+        <field name="binding_model_id" ref="model_restaurant_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
